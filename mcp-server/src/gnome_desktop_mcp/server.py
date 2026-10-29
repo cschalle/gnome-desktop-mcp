@@ -6,7 +6,7 @@ from gnome_desktop_mcp.dbus_client import (
     DbusClient, AutomationDisabledError, ExtensionNotFoundError,
     WindowNotFoundError, ScreenshotFailedError, InputFailedError,
 )
-from gnome_desktop_mcp.utils import friendly_to_keyval, translate_combo, file_to_base64, cleanup_file
+from gnome_desktop_mcp.utils import friendly_to_keyval, combo_to_keyvals, file_to_base64, cleanup_file
 
 mcp = FastMCP(
     "gnome-desktop-automation",
@@ -291,12 +291,14 @@ def key_combo(keys: str) -> str:
     """Press a key combination.
 
     Args:
-        keys: Combo like "Ctrl+Alt+t", "Shift+F5", "Super+l".
+        keys: Combo like "Ctrl+Alt+t", "Shift+F5", "Super+l". Keys are held in
+            the order given and released in reverse. For the + key itself use
+            its keysym name, as in "Ctrl+plus".
     """
     try:
+        keyvals = combo_to_keyvals(keys)
         client = _get_client()
-        combo = translate_combo(keys)
-        client.key_combo(combo)
+        client.key_combo(keyvals)
         return f"Key combo pressed: {keys}"
     except Exception as e:
         return _handle_error(e)

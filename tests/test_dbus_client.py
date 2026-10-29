@@ -39,6 +39,13 @@ def test_screenshot(mock_proxy):
     proxy.Screenshot.assert_called_once_with(False, timeout=5000)
 
 
+def test_key_combo_sends_keyvals(mock_proxy):
+    client, proxy = mock_proxy
+    proxy.KeyCombo.return_value = True
+    assert client.key_combo([65507, ord("c")]) is True
+    proxy.KeyCombo.assert_called_once_with([65507, 99], timeout=5000)
+
+
 def test_error_disabled():
     err = DBusError("io.github.gnomemcp.DesktopAutomation.Error.Disabled: Automation is disabled")
     result = _translate_error(err)

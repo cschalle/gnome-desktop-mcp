@@ -89,8 +89,9 @@ const INTERFACE_XML = `
       <arg type="u" direction="in" name="keyval"/>
       <arg type="b" direction="out" name="success"/>
     </method>
+    <!-- Keyvals, not key names: Clutter cannot resolve names inside the Shell. -->
     <method name="KeyCombo">
-      <arg type="s" direction="in" name="combo"/>
+      <arg type="au" direction="in" name="keyvals"/>
       <arg type="b" direction="out" name="success"/>
     </method>
     <method name="TypeText">
@@ -407,10 +408,19 @@ export class DbusService {
         }
     }
 
-    KeyComboAsync([combo], invocation) {
+    KeyComboAsync([keyvals], invocation) {
         if (!this._checkEnabled(invocation, 'KeyCombo')) return;
+        // Checked here so an empty combo cannot reach the virtual keyboard.
+        if (!keyvals || keyvals.length === 0) {
+            invocation.return_error_literal(
+                Gio.DBusError,
+                Gio.DBusError.INVALID_ARGS,
+                `${ERROR_DOMAIN}.InputFailed: a key combo needs at least one keyval`
+            );
+            return;
+        }
         try {
-            Input.keyCombo(combo);
+            Input.keyCombo(keyvals);
             invocation.return_value(GLib.Variant.new('(b)', [true]));
         } catch (e) {
             invocation.return_error_literal(Gio.DBusError, Gio.DBusError.FAILED,
