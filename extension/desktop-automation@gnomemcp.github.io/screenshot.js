@@ -2,7 +2,13 @@ import Shell from 'gi://Shell';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 
-const SCREENSHOT_DIR = '/tmp/gnome-mcp';
+// XDG_RUNTIME_DIR (/run/user/UID) is owned by the user and mode 0700, so no
+// other local user can pre-create this path, swap it for a symlink, or read
+// what lands in it. /tmp would be world-writable and racy.
+const SCREENSHOT_DIR = GLib.build_filenamev([
+    GLib.get_user_runtime_dir(),
+    'gnome-mcp',
+]);
 let _counter = 0;
 
 function _ensureDir() {

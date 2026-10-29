@@ -114,6 +114,9 @@ Add to `~/.claude/settings.json`:
 - **Toggle switch** to disable all automation instantly
 - **Activity log** tracks last 20 method calls (name + timestamp only, no data)
 - **D-Bus access gating**: all methods blocked when disabled
+- **Screenshots** are written 0600 to `$XDG_RUNTIME_DIR/gnome-mcp` (not `/tmp`),
+  so no other local user can read or tamper with them. They persist until
+  `cleanup_screenshots` runs or you log out
 - **Session bus trust model**: any local user process can call the API (consistent with GNOME's security model)
 
 ## Architecture

@@ -33,9 +33,9 @@ def test_list_windows(mock_proxy):
 
 def test_screenshot(mock_proxy):
     client, proxy = mock_proxy
-    proxy.Screenshot.return_value = "/tmp/gnome-mcp/screenshot-123.png"
+    proxy.Screenshot.return_value = "/run/user/1000/gnome-mcp/screenshot-123.png"
     result = client.screenshot(False)
-    assert result == "/tmp/gnome-mcp/screenshot-123.png"
+    assert result == "/run/user/1000/gnome-mcp/screenshot-123.png"
     proxy.Screenshot.assert_called_once_with(False, timeout=5000)
 
 
