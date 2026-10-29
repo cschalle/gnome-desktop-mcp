@@ -9,6 +9,8 @@ const SCREENSHOT_DIR = GLib.build_filenamev([
     GLib.get_user_runtime_dir(),
     'gnome-mcp',
 ]);
+const SCREENSHOT_PREFIX = 'screenshot-';
+const SCREENSHOT_SUFFIX = '.png';
 let _counter = 0;
 
 function _ensureDir() {
@@ -19,7 +21,7 @@ function _nextFilename() {
     _counter++;
     return GLib.build_filenamev([
         SCREENSHOT_DIR,
-        `screenshot-${Date.now()}-${_counter}.png`,
+        `${SCREENSHOT_PREFIX}${Date.now()}-${_counter}${SCREENSHOT_SUFFIX}`,
     ]);
 }
 
@@ -116,12 +118,20 @@ export function cleanupScreenshots() {
         return count;
 
     const enumerator = dir.enumerate_children(
-        'standard::name', Gio.FileQueryInfoFlags.NONE, null);
+        'standard::name', Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
     let info;
     while ((info = enumerator.next_file(null)) !== null) {
-        const child = dir.get_child(info.get_name());
-        if (child.delete(null))
-            count++;
+        // Only ever delete files this module created.
+        const name = info.get_name();
+        if (!name.startsWith(SCREENSHOT_PREFIX) || !name.endsWith(SCREENSHOT_SUFFIX))
+            continue;
+        try {
+            if (dir.get_child(name).delete(null))
+                count++;
+        } catch (e) {
+            logError(e, `[DesktopAutomation] failed to delete ${name}`);
+        }
     }
+    enumerator.close(null);
     return count;
 }
