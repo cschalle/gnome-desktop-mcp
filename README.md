@@ -112,10 +112,14 @@ Automation is deliberately not switchable from MCP — only from the top bar men
 
 ## Privacy
 
-- **Top bar indicator** shows when automation is active
-- **Toggle switch** to disable all automation instantly
-- **Activity log** tracks last 20 method calls (name + timestamp only, no data)
-- **D-Bus access gating**: all methods blocked when disabled
+- **Top bar indicator** shows when automation is active, and always reflects the
+  service's real state — including changes made over D-Bus
+- **Toggle switch** to disable all automation instantly. Automation can only be
+  *enabled* from this menu: `SetEnabled(true)` over D-Bus is refused, so no other
+  process (and no MCP client) can re-arm it behind your back
+- **Activity log** tracks last 20 method calls (name + timestamp only, no data),
+  marking calls that were blocked
+- **D-Bus access gating**: all automation methods blocked when disabled
 - **Screenshots** are written 0600 to `$XDG_RUNTIME_DIR/gnome-mcp` (not `/tmp`),
   so no other local user can read or tamper with them. They persist until
   `cleanup_screenshots` runs or you log out
