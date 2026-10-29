@@ -142,7 +142,8 @@ The Python MCP server (`gnome-desktop-mcp`) translates MCP tool calls into D-Bus
 pip install -e mcp-server[dev]
 
 # Run tests
-python -m pytest tests/ -v
+python -m pytest tests/ -v          # MCP server
+./tests/extension/run.sh            # GNOME Shell extension (needs gjs)
 
 # Watch extension logs
 journalctl /usr/bin/gnome-shell -f
