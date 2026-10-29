@@ -14,10 +14,10 @@ GNOME Wayland blocks external processes from taking screenshots or injecting inp
 
 ## Features
 
-- **30 MCP tools**: screenshots, window management, input injection, workspace control
+- **29 MCP tools**: screenshots, window management, input injection, workspace control
 - **Privacy indicator**: top bar icon shows connection status (red = active, grey = idle)
-- **Consent dialog**: first-use confirmation before enabling automation
-- **Access gating**: master kill switch to disable all automation instantly
+- **Consent dialog**: first-use notice when the extension is enabled
+- **Access gating**: master kill switch; automation can only be armed from the top bar menu, not over D-Bus
 
 ## Requirements
 
@@ -105,8 +105,10 @@ Add to `~/.claude/settings.json`:
 | Tool | Description |
 |---|---|
 | `ping` | Check extension is alive |
-| `get_enabled` / `set_enabled` | Check/toggle automation |
+| `get_enabled` | Check whether automation is enabled |
 | `get_monitors` | List monitors with geometry |
+
+Automation is deliberately not switchable from MCP — only from the top bar menu.
 
 ## Privacy
 

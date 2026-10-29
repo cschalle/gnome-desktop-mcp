@@ -85,6 +85,13 @@ class DbusClient:
         return self._call("GetEnabled")
 
     def set_enabled(self, enabled: bool) -> bool:
+        """Turn automation off.
+
+        Only ``False`` is accepted: the extension refuses to enable automation
+        over D-Bus, so that the panel toggle stays a real kill switch rather
+        than one any session process can flip back on. Passing ``True`` raises
+        a D-Bus AccessDenied error.
+        """
         return self._call("SetEnabled", enabled)
 
     def get_monitors(self) -> list[dict]:

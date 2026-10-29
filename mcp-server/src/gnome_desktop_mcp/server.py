@@ -424,19 +424,13 @@ def get_enabled() -> str:
     """Check if automation is enabled."""
     try:
         client = _get_client()
-        enabled = client.get_enabled()
-        return f"Automation is {'enabled' if enabled else 'disabled'}"
-    except Exception as e:
-        return _handle_error(e)
-
-
-@mcp.tool()
-def set_enabled(enabled: bool) -> str:
-    """Enable or disable automation."""
-    try:
-        client = _get_client()
-        client.set_enabled(enabled)
-        return f"Automation {'enabled' if enabled else 'disabled'}"
+        if client.get_enabled():
+            return "Automation is enabled"
+        return (
+            "Automation is disabled. It cannot be enabled from here -- ask the "
+            "user to turn on 'Allow Automation' in the Desktop Automation menu "
+            "in the GNOME top bar."
+        )
     except Exception as e:
         return _handle_error(e)
 
