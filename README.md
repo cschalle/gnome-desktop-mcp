@@ -26,6 +26,24 @@ GNOME Wayland blocks external processes from taking screenshots or injecting inp
 
 ## Installation
 
+### Fedora (RPM)
+
+Builds two packages -- the extension and the MCP server -- with dependencies
+resolved from Fedora's repositories, so `dnf remove` takes everything with it:
+
+```bash
+./packaging/build-rpm.sh
+sudo dnf install ./dist/*.noarch.rpm
+```
+
+The extension lands in `/usr/share/gnome-shell/extensions/`, system-wide but
+still enabled per user. The GSettings schema is installed as XML to
+`/usr/share/glib-2.0/schemas/` and compiled by glib2's file triggers, so no
+scriptlets run and nothing is left stale on removal.
+
+If the binary build stops and asks for the Python build backend, run
+`sudo dnf builddep dist/*.src.rpm` and re-run the script.
+
 ### Quick install (development)
 
 ```bash
